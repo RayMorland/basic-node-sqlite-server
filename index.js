@@ -1,5 +1,7 @@
 var http = require("http");
 var https = require("https");
+require("dotenv").config();
+
 const sqlite3 = require("sqlite3").verbose();
 let db = new sqlite3.Database("./nodesql.db", (err) => {
   if (err) {
@@ -15,7 +17,7 @@ const options = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "X-Shopify-Storefront-Access-Token": "e3ad9b2133e50c72d673596d5004d14b",
+    "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_ACCESS_TOKEN,
   },
 };
 

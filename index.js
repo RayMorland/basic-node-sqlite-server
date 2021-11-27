@@ -1,56 +1,58 @@
 var http = require("http");
 var https = require("https");
+var os = require("os");
+var fs = require("fs");
 require("dotenv").config();
 
 const sqlite3 = require("sqlite3").verbose();
-let db = new sqlite3.Database("./nodesql.db", (err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log("Connected to the in-memory SQlite database.");
-});
+// let db = new sqlite3.Database("./nodesql.db", (err) => {
+//   if (err) {
+//     return console.error(err.message);
+//   }
+//   console.log("Connected to the in-memory SQlite database.");
+// });
 
-const options = {
-  hostname: "morlandsdevstore.myshopify.com",
-  port: 443,
-  path: "/api/graphql.json",
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_ACCESS_TOKEN,
-  },
-};
+// const options = {
+//   hostname: "morlandsdevstore.myshopify.com",
+//   port: 443,
+//   path: "/api/graphql.json",
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//     "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_ACCESS_TOKEN,
+//   },
+// };
 
-const data = new TextEncoder().encode(
-  JSON.stringify({
-    query: `query {
-    products (first: 5) {
-        edges {
-            node {
-                id
-                title
-                description
-            }
-        }
-    }
-}`,
-  })
-);
+// const data = new TextEncoder().encode(
+//   JSON.stringify({
+//     query: `query {
+//     products (first: 5) {
+//         edges {
+//             node {
+//                 id
+//                 title
+//                 description
+//             }
+//         }
+//     }
+// }`,
+//   })
+// );
 
-const req = https.request(options, (res) => {
-  console.log(`statusCode: ${res.statusCode}`);
+// const req = https.request(options, (res) => {
+//   console.log(`statusCode: ${res.statusCode}`);
 
-  res.on("data", (d) => {
-    process.stdout.write(d);
-  });
-});
+//   res.on("data", (d) => {
+//     process.stdout.write(d);
+//   });
+// });
 
-req.on("error", (error) => {
-  console.error(error);
-});
+// req.on("error", (error) => {
+//   console.error(error);
+// });
 
-req.write(data);
-req.end();
+// req.write(data);
+// req.end();
 
 // function dbConnect() {
 //   return new Promise((resolve, reject) => {
@@ -98,3 +100,14 @@ req.end();
 // server.listen(3000);
 
 // req.end();
+
+var server = http.createServer((req, res) => {
+  fs.readFile(__dirname + "/data.txt", (err, data) => {
+    console.log(data);
+    res.end(data);
+  });
+});
+
+server.listen(3000);
+
+// console.log(os.cpus());
